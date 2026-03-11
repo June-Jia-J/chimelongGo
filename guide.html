@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>长隆旅游 - 攻略</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <script>if(localStorage.getItem('theme')==='dark')document.body.setAttribute('data-theme','dark');</script>
+  <script>document.body.classList.add('page-enter');requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.body.classList.remove('page-enter'); }); });</script>
+  <!-- 头部：导航栏 -->
+  <header>
+    <nav class="site-nav" role="navigation">
+      <div class="container flex items-center justify-between">
+        <div class="nav-brand-wrap">
+          <a href="index.html" class="nav-brand">
+            <span class="nav-brand-icon" aria-hidden="true"><img src="assets/icons/favicon.ico" alt="" width="32" height="32"></span>
+            长隆旅游
+          </a>
+          <span class="nav-brand-tagline">探索精彩旅程</span>
+        </div>
+        <ul class="nav-menu hidden md:flex">
+          <li><a href="index.html">首页</a></li>
+          <li class="nav-dropdown">
+            <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">目的地<span class="nav-dropdown-arrow" aria-hidden="true">▾</span></button>
+            <ul class="nav-dropdown-menu" role="menu">
+              <li role="none"><a href="destinations.html" role="menuitem">全部目的地</a></li>
+              <li role="none"><a href="destinations.html?city=广州" role="menuitem">广州长隆</a></li>
+              <li role="none"><a href="destinations.html?city=珠海" role="menuitem">珠海长隆</a></li>
+            </ul>
+          </li>
+          <li><a href="guide.html">攻略</a></li>
+          <li><a href="analytics.html">数据</a></li>
+        </ul>
+        <div class="nav-actions flex items-center gap-2">
+          <button id="darkModeToggle" class="theme-toggle" aria-label="切换暗黑模式">🌙</button>
+          <button class="nav-toggle md:hidden" aria-label="切换菜单">☰</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 主体：攻略详情页 -->
+  <main>
+    <article class="guide-article py-12">
+      <div class="container max-w-3xl">
+        <!-- 区块：攻略标题、日期、封面、正文 -->
+        <div id="guideHeader" class="mb-8">
+          <h1 id="guideTitle" class="text-2xl font-bold mb-2">攻略详情</h1>
+          <p id="guideDate" class="text-gray-500 text-sm"></p>
+          <img id="guideCover" src="" alt="" class="w-full rounded-lg mt-4" style="max-height:400px;object-fit:cover;">
+        </div>
+        <div id="guideContent" class="guide-content prose mb-12"></div>
+
+        <!-- 区块：攻略视频与语音导览 -->
+        <section class="media-section mb-12" id="guide-media">
+          <h2 class="text-xl font-semibold mb-4">攻略视频</h2>
+          <div class="media-video-wrap">
+            <video class="media-video" controls preload="metadata" aria-label="长隆攻略宣传视频">
+              <source src="assets/media/promo.mp4" type="video/mp4">
+              您的浏览器不支持视频播放。
+            </video>
+          </div>
+          <h2 class="text-xl font-semibold mb-4 mt-8">语音导览</h2>
+          <div class="media-audio-wrap">
+            <audio class="media-audio" controls preload="metadata" aria-label="景区语音导览">
+              <source src="assets/media/guide-audio.mp3" type="audio/mpeg">
+              您的浏览器不支持音频播放。
+            </audio>
+          </div>
+        </section>
+
+        <!-- 区块：3D 旅游相册（拖动旋转 + 点击翻页） -->
+        <section class="gallery-3d mb-12">
+          <h2 class="text-xl font-semibold mb-4">旅游相册</h2>
+          <p class="text-sm text-gray-500 mb-4">拖动容器可旋转相册；点击卡片可 3D 翻页查看背面</p>
+          <div class="gallery-3d-container" id="gallery3d">
+            <div class="gallery-3d-card" data-caption="长隆园区小火车">
+              <div class="gallery-3d-card-inner">
+                <div class="gallery-3d-front"><img data-src="assets/images/gallery-1.jpg" src="" alt="长隆园区小火车" class="lazy"></div>
+                <div class="gallery-3d-back"><span>长隆园区小火车</span></div>
+              </div>
+            </div>
+            <div class="gallery-3d-card" data-caption="珠海长隆鲸鲨馆">
+              <div class="gallery-3d-card-inner">
+                <div class="gallery-3d-front"><img data-src="assets/images/gallery-2.jpg" src="" alt="珠海长隆鲸鲨馆" class="lazy"></div>
+                <div class="gallery-3d-back"><span>珠海长隆鲸鲨馆</span></div>
+              </div>
+            </div>
+            <div class="gallery-3d-card" data-caption="长隆水上乐园">
+              <div class="gallery-3d-card-inner">
+                <div class="gallery-3d-front"><img data-src="assets/images/gallery-3.jpg" src="" alt="长隆水上乐园" class="lazy"></div>
+                <div class="gallery-3d-back"><span>长隆水上乐园</span></div>
+              </div>
+            </div>
+            <div class="gallery-3d-card" data-caption="长隆大马戏">
+              <div class="gallery-3d-card-inner">
+                <div class="gallery-3d-front"><img data-src="assets/images/gallery-4.jpg" src="" alt="长隆大马戏" class="lazy"></div>
+                <div class="gallery-3d-back"><span>长隆大马戏</span></div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- 区块：咨询表单 -->
+        <section class="form-section mb-12">
+          <h2 class="text-xl font-semibold mb-4">咨询表单</h2>
+          <form class="guide-form" id="consultForm">
+            <div class="form-group">
+              <label>姓名</label>
+              <input type="text" name="name" required placeholder="请输入姓名">
+            </div>
+            <div class="form-group">
+              <label>电话</label>
+              <input type="tel" name="phone" required placeholder="请输入电话">
+            </div>
+            <div class="form-group">
+              <label>密码（动态显示）</label>
+              <div class="password-wrap">
+                <input type="password" name="password" id="pwdInput" placeholder="请输入密码">
+                <button type="button" id="togglePwd" class="pwd-toggle" aria-label="显示密码">👁</button>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>咨询内容</label>
+              <textarea name="content" rows="4" placeholder="请输入咨询内容"></textarea>
+            </div>
+            <button type="submit" class="btn-primary">提交咨询</button>
+          </form>
+        </section>
+
+        <!-- 区块：相关攻略推荐 -->
+        <section class="related-guides">
+          <h2 class="text-xl font-semibold mb-4">相关攻略</h2>
+          <div id="relatedGuides" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </section>
+      </div>
+    </article>
+  </main>
+
+  <!-- 底部：版权与联系方式 -->
+  <footer class="site-footer">
+    <div class="container text-center">
+      <p>© 2025 <span class="footer-brand">长隆旅游</span> 版权所有</p>
+      <p class="footer-contact">联系我们：400-xxx-xxxx</p>
+    </div>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="回到顶部">↑</button>
+
+  <script src="js/page-transition.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/dark-mode.js"></script>
+  <script src="js/back-to-top.js"></script>
+  <script src="js/lazy-load.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      initBackToTop('#backToTop');
+      initDarkMode('#darkModeToggle');
+      var id = (window.Utils && window.Utils.getQueryParam && window.Utils.getQueryParam('id')) || '1';
+      fetch('assets/data/guides.json').then(function(r){return r.json();}).then(function(guides){
+        var g = guides.find(function(x){ return String(x.id) === String(id); }) || guides[0];
+        document.getElementById('guideTitle').textContent = g.title;
+        document.getElementById('guideDate').textContent = '发布日期：' + (g.publishDate || '');
+        document.getElementById('guideCover').src = g.coverUrl;
+        document.getElementById('guideCover').alt = g.title;
+        document.getElementById('guideContent').innerHTML = g.content || '';
+
+        var related = (g.relatedIds || []).map(function(rid){
+          return guides.find(function(x){ return x.id === rid; });
+        }).filter(Boolean);
+        var relEl = document.getElementById('relatedGuides');
+        relEl.innerHTML = related.map(function(r){
+          return '<a href="guide.html?id='+r.id+'" class="dest-card">'+
+            '<div class="dest-card-img-wrap"><img data-src="'+r.coverUrl+'" src="" alt="'+r.title+'" class="lazy"></div>'+
+            '<div class="dest-card-body"><h3>'+r.title+'</h3></div></a>';
+        }).join('');
+        if (related.length && typeof initLazyLoad === 'function') initLazyLoad('img[data-src]');
+      }).catch(function(){});
+
+      document.getElementById('togglePwd').addEventListener('click', function(){
+        var inp = document.getElementById('pwdInput');
+        var isPwd = inp.type === 'password';
+        inp.type = isPwd ? 'text' : 'password';
+        this.textContent = isPwd ? '🙈' : '👁';
+        this.setAttribute('aria-label', isPwd ? '隐藏密码' : '显示密码');
+      });
+      document.getElementById('consultForm').addEventListener('submit', function(e){
+        e.preventDefault();
+        Toast.success('感谢您的咨询，我们会尽快联系您！');
+      });
+
+      var gallery = document.getElementById('gallery3d');
+      if (gallery) {
+        var dragging = false;
+        var downX = 0, downY = 0, startX = 0, startY = 0;
+        var baseRotateX = 0, baseRotateY = 0;
+        var cards = gallery.querySelectorAll('.gallery-3d-card');
+        var rafId = 0;
+
+        function applyTransform() {
+          var rx = baseRotateX;
+          var ry = baseRotateY;
+          var t = 'rotateX(' + rx + 'deg) rotateY(' + ry + 'deg)';
+          for (var i = 0; i < cards.length; i++) {
+            cards[i].style.transform = t;
+          }
+          rafId = 0;
+        }
+
+        gallery.addEventListener('mousedown', function (e) {
+          dragging = true;
+          gallery.classList.add('gallery-3d-dragging');
+          downX = e.clientX;
+          downY = e.clientY;
+          startX = e.clientX;
+          startY = e.clientY;
+        });
+        gallery.addEventListener('mousemove', function (e) {
+          if (!dragging) return;
+          var dx = e.clientX - startX;
+          var dy = e.clientY - startY;
+          baseRotateY += dx * 0.4;
+          baseRotateX -= dy * 0.4;
+          baseRotateX = Math.max(-30, Math.min(30, baseRotateX));
+          startX = e.clientX;
+          startY = e.clientY;
+          if (!rafId) {
+            rafId = requestAnimationFrame(applyTransform);
+          }
+        });
+        gallery.addEventListener('mouseup', function (e) {
+          if (!dragging) return;
+          gallery.classList.remove('gallery-3d-dragging');
+          var moved = Math.abs(e.clientX - downX) + Math.abs(e.clientY - downY);
+          if (moved < 8) {
+            var card = e.target.closest('.gallery-3d-card');
+            if (card) card.classList.toggle('flipped');
+          }
+          dragging = false;
+          rafId = 0;
+        });
+        gallery.addEventListener('mouseleave', function () {
+          if (dragging) gallery.classList.remove('gallery-3d-dragging');
+          dragging = false;
+          rafId = 0;
+        });
+
+        for (var i = 0; i < cards.length; i++) {
+          cards[i].style.cursor = 'pointer';
+        }
+      }
+      if (typeof initLazyLoad === 'function') initLazyLoad('img[data-src]');
+    });
+  </script>
+</body>
+</html>

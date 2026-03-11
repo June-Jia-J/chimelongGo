@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>长隆旅游 - 目的地</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <script>if(localStorage.getItem('theme')==='dark')document.body.setAttribute('data-theme','dark');</script>
+  <script>document.body.classList.add('page-enter');requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.body.classList.remove('page-enter'); }); });</script>
+  <!-- 头部：导航栏 -->
+  <header>
+    <nav class="site-nav" role="navigation">
+      <div class="container flex items-center justify-between">
+        <div class="nav-brand-wrap">
+          <a href="index.html" class="nav-brand">
+            <span class="nav-brand-icon" aria-hidden="true"><img src="assets/icons/favicon.ico" alt="" width="32" height="32"></span>
+            长隆旅游
+          </a>
+          <span class="nav-brand-tagline">探索精彩旅程</span>
+        </div>
+        <ul class="nav-menu hidden md:flex">
+          <li><a href="index.html">首页</a></li>
+          <li class="nav-dropdown">
+            <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">目的地<span class="nav-dropdown-arrow" aria-hidden="true">▾</span></button>
+            <ul class="nav-dropdown-menu" role="menu">
+              <li role="none"><a href="destinations.html" role="menuitem">全部目的地</a></li>
+              <li role="none"><a href="destinations.html?city=广州" role="menuitem">广州长隆</a></li>
+              <li role="none"><a href="destinations.html?city=珠海" role="menuitem">珠海长隆</a></li>
+            </ul>
+          </li>
+          <li><a href="guide.html">攻略</a></li>
+          <li><a href="analytics.html">数据</a></li>
+        </ul>
+        <div class="nav-actions flex items-center gap-2">
+          <button id="darkModeToggle" class="theme-toggle" aria-label="切换暗黑模式">🌙</button>
+          <button class="nav-toggle md:hidden" aria-label="切换菜单">☰</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 主体：目的地列表页 -->
+  <main>
+    <!-- 区块：目的地列表（标题 + 筛选 + 搜索 + 列表） -->
+    <section class="destinations-page py-12">
+      <div class="container">
+        <h1 class="text-2xl font-bold mb-8">目的地列表</h1>
+        <!-- 当前筛选提示（URL 有 city 时显示） -->
+        <div id="cityFilterHint" class="city-filter-hint mb-4" style="display:none;"></div>
+        <!-- 省市县三级联动筛选 -->
+        <div class="region-linkage mb-6">
+          <span class="region-linkage-label">按地区筛选：</span>
+          <select id="regionProvince" class="region-select" aria-label="选择省份">
+            <option value="">请选择省</option>
+          </select>
+          <select id="regionCity" class="region-select" aria-label="选择城市" disabled>
+            <option value="">请选择市</option>
+          </select>
+          <select id="regionDistrict" class="region-select" aria-label="选择区县" disabled>
+            <option value="">请选择县/区</option>
+          </select>
+        </div>
+        <!-- 搜索框与联想结果 -->
+        <div class="search-box mb-8 relative">
+          <input type="text" id="searchInput" class="search-input" placeholder="搜索目的地..." autocomplete="off">
+          <div id="searchResults" class="search-results"></div>
+        </div>
+        <!-- 天气联动展示区 -->
+        <div id="weatherBox" class="weather-box mb-6" style="display:none;"></div>
+        <!-- 目的地卡片网格 -->
+        <div id="destinationsList" class="destinations-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- 由 JS 动态填充 -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 底部：版权与联系方式 -->
+  <footer class="site-footer">
+    <div class="container text-center">
+      <p>© 2025 <span class="footer-brand">长隆旅游</span> 版权所有</p>
+      <p class="footer-contact">联系我们：400-xxx-xxxx</p>
+    </div>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="回到顶部">↑</button>
+
+  <script src="js/page-transition.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/back-to-top.js"></script>
+  <script src="js/lazy-load.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/region-linkage.js"></script>
+  <script src="js/weather.js"></script>
+  <script src="js/dark-mode.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      initBackToTop('#backToTop');
+      initDarkMode('#darkModeToggle');
+
+      var params = new URLSearchParams(window.location.search);
+      var cityParam = params.get('city');
+      var cityLabels = { '广州': '广州长隆', '珠海': '珠海长隆' };
+
+      var filterHintEl = document.getElementById('cityFilterHint');
+      if (cityParam && filterHintEl) {
+        filterHintEl.style.display = 'block';
+        filterHintEl.innerHTML = '当前筛选：<strong>' + (cityLabels[cityParam] || cityParam) + '</strong> <a href="destinations.html" class="filter-clear">显示全部</a>';
+      }
+
+      window.onSearchSelect = function (item) {
+        if (item && item.city && typeof showWeather === 'function') {
+          showWeather(item.city, '#weatherBox');
+        }
+      };
+
+      var fullList = [];
+      function renderDestinations(list) {
+        var el = document.getElementById('destinationsList');
+        if (!el) return;
+        el.innerHTML = list.length ? list.map(function (d) {
+          return '<a href="guide.html?id=' + d.id + '" class="dest-card">' +
+            '<div class="dest-card-img-wrap"><img data-src="' + d.imageUrl + '" src="" alt="' + d.name + '" class="lazy"></div>' +
+            '<div class="dest-card-body"><h3>' + d.name + '</h3><p>' + (d.description || '').slice(0, 50) + '...</p></div></a>';
+        }).join('') : '<p class="text-gray-500 py-8 text-center col-span-full">暂无匹配的目的地</p>';
+        if (list.length && typeof initLazyLoad === 'function') initLazyLoad('img[data-src]');
+      }
+
+      function applyRegionThenRender(list) {
+        var filter = typeof getRegionFilter === 'function' ? getRegionFilter() : {};
+        list = typeof applyRegionFilter === 'function' ? applyRegionFilter(list, filter) : list;
+        renderDestinations(list);
+      }
+
+      initSearch('#searchInput', '#searchResults', 'assets/data/destinations.json', {
+        onFilterChange: applyRegionThenRender,
+        initialFilter: cityParam ? { city: cityParam } : undefined
+      });
+
+      initRegionLinkage({
+        regionUrl: 'assets/data/region.json',
+        getFullList: function () { return fullList; },
+        getSearchKeyword: function () { return (document.getElementById('searchInput') || {}).value || ''; },
+        onRegionChange: renderDestinations,
+        preselectCity: cityParam || undefined
+      });
+
+      fetch('assets/data/destinations.json')
+        .then(function (r) { return r.json(); })
+        .then(function (list) {
+          fullList = list || [];
+          var kw = (document.getElementById('searchInput') || {}).value || '';
+          if (kw.trim()) return;
+          if (cityParam) {
+            list = list.filter(function (d) { return (d.city || '') === cityParam; });
+          }
+          applyRegionThenRender(list);
+        })
+        .catch(function () {});
+    });
+  </script>
+</body>
+</html>

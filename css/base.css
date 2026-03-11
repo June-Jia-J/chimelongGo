@@ -1,0 +1,138 @@
+/**
+ * base.css - 通用样式、CSS变量、重置、字体
+ * 长隆旅游网站 - 现代官网级设计
+ */
+
+/* ========== CSS 变量（莫兰迪配色 + 设计令牌） ========== */
+:root {
+  /* 主色调 */
+  --color-primary: #1E3A8A;
+  --color-primary-light: #3B82F6;
+  --color-primary-dark: #1E40AF;
+  --color-primary-hover: #1e3a8acc;
+  /* 暖米色 */
+  --color-cream: #F5F0E1;
+  --color-cream-dark: #E2D9C8;
+  /* 中性色 */
+  --color-white: #FFFFFF;
+  --color-gray-100: #F8FAFC;
+  --color-gray-200: #E2E8F0;
+  --color-gray-300: #CBD5E1;
+  --color-gray-500: #64748B;
+  --color-gray-600: #475569;
+  --color-gray-700: #334155;
+  --color-gray-900: #0F172A;
+  /* 圆角（统一层次） */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-full: 9999px;
+  /* 阴影（层次感） */
+  --shadow-sm: 0 1px 3px rgba(30, 58, 138, 0.06);
+  --shadow-md: 0 4px 12px rgba(30, 58, 138, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  --shadow-lg: 0 12px 24px rgba(30, 58, 138, 0.1), 0 4px 8px rgba(0, 0, 0, 0.04);
+  --shadow-xl: 0 20px 40px rgba(30, 58, 138, 0.12);
+  /* 过渡（流畅交互） */
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-slow: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  /* 间距（留白体系） */
+  --space-section: 4rem;
+  --space-block: 1.5rem;
+  --space-element: 0.75rem;
+  /* 导航栏（现代官网级） */
+  --nav-height: 72px;
+  --nav-bg-from: #FFFFFF;
+  --nav-bg-to: #F8FAFC;
+  --nav-border: rgba(30, 58, 138, 0.06);
+}
+
+/* 暗黑模式变量（base.css 中定义，由 dark-mode.js 切换 body[data-theme] 生效） */
+[data-theme="dark"] {
+  --color-primary: #60A5FA;
+  --color-cream: #1F2937;
+  --color-cream-dark: #374151;
+  --color-gray-900: #F9FAFB;
+  --color-gray-700: #E5E7EB;
+  --color-gray-600: #9CA3AF;
+  --color-gray-500: #9CA3AF;
+  --nav-bg-from: rgba(17, 24, 39, 0.6);
+  --nav-bg-to: rgba(31, 41, 55, 0.4);
+  --nav-border: rgba(255, 255, 255, 0.06);
+}
+
+/* 主题切换全局过渡：覆盖层渐变（与页面无冲突，仅过渡用） */
+#theme-transition-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+  pointer-events: none;
+  transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* ========== 基础重置 ========== */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 16px;
+  line-height: 1.6;
+  letter-spacing: 0.01em;
+  color: var(--color-gray-900);
+  background: linear-gradient(180deg, var(--color-cream) 0%, var(--color-cream-dark) 100%);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+ul, ol {
+  list-style: none;
+}
+
+/* 标题层级（排版结构） */
+h1, h2, h3, h4 {
+  line-height: 1.3;
+  font-weight: 600;
+}
+
+h1 { font-size: 1.75rem; letter-spacing: -0.02em; }
+h2 { font-size: 1.5rem; letter-spacing: -0.01em; }
+h3 { font-size: 1.25rem; }

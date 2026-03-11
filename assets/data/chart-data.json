@@ -1,0 +1,54 @@
+{
+  "cityVisit": {
+    "month": [
+      {"city": "广州", "value": 128},
+      {"city": "珠海", "value": 95},
+      {"city": "深圳", "value": 88},
+      {"city": "北京", "value": 76},
+      {"city": "上海", "value": 72},
+      {"city": "成都", "value": 65},
+      {"city": "杭州", "value": 58},
+      {"city": "西安", "value": 52}
+    ],
+    "quarter": [
+      {"city": "广州", "value": 380},
+      {"city": "珠海", "value": 290},
+      {"city": "深圳", "value": 260},
+      {"city": "北京", "value": 235},
+      {"city": "上海", "value": 220},
+      {"city": "成都", "value": 195},
+      {"city": "杭州", "value": 178},
+      {"city": "西安", "value": 165}
+    ],
+    "year": [
+      {"city": "广州", "value": 1480},
+      {"city": "珠海", "value": 1120},
+      {"city": "深圳", "value": 1020},
+      {"city": "北京", "value": 920},
+      {"city": "上海", "value": 880},
+      {"city": "成都", "value": 760},
+      {"city": "杭州", "value": 680},
+      {"city": "西安", "value": 620}
+    ]
+  },
+  "travelMode": [
+    {"name": "飞机", "value": 35},
+    {"name": "高铁", "value": 40},
+    {"name": "自驾", "value": 18},
+    {"name": "其他", "value": 7}
+  ],
+  "hotTrend": [
+    {"month": "1月", "value": 65},
+    {"month": "2月", "value": 72},
+    {"month": "3月", "value": 78},
+    {"month": "4月", "value": 85},
+    {"month": "5月", "value": 92},
+    {"month": "6月", "value": 88},
+    {"month": "7月", "value": 95},
+    {"month": "8月", "value": 98},
+    {"month": "9月", "value": 90},
+    {"month": "10月", "value": 88},
+    {"month": "11月", "value": 75},
+    {"month": "12月", "value": 68}
+  ]
+}

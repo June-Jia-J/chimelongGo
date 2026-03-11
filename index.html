@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>长隆旅游 - 首页</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <script>if(localStorage.getItem('theme')==='dark')document.body.setAttribute('data-theme','dark');</script>
+  <script>document.body.classList.add('page-enter');requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.body.classList.remove('page-enter'); }); });</script>
+  <!-- 头部：导航栏 -->
+  <header>
+    <nav class="site-nav" role="navigation">
+      <div class="container flex items-center justify-between">
+        <div class="nav-brand-wrap">
+          <a href="index.html" class="nav-brand">
+            <span class="nav-brand-icon" aria-hidden="true"><img src="assets/icons/favicon.ico" alt="" width="32" height="32"></span>
+            长隆旅游
+          </a>
+          <!-- 页面内锚点导航（仅首页，置于主标题下） -->
+          <nav class="anchor-nav anchor-nav-in-header" aria-label="本页导航">
+            <a href="#carousel">轮播</a>
+            <a href="#destinations">热门目的地</a>
+            <a href="#entries">入口</a>
+          </nav>
+        </div>
+        <ul class="nav-menu hidden md:flex">
+          <li><a href="index.html">首页</a></li>
+          <li class="nav-dropdown">
+            <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">目的地<span class="nav-dropdown-arrow" aria-hidden="true">▾</span></button>
+            <ul class="nav-dropdown-menu" role="menu">
+              <li role="none"><a href="destinations.html" role="menuitem">全部目的地</a></li>
+              <li role="none"><a href="destinations.html?city=广州" role="menuitem">广州长隆</a></li>
+              <li role="none"><a href="destinations.html?city=珠海" role="menuitem">珠海长隆</a></li>
+            </ul>
+          </li>
+          <li><a href="guide.html">攻略</a></li>
+          <li><a href="analytics.html">数据</a></li>
+        </ul>
+        <div class="nav-actions flex items-center gap-2">
+          <button id="darkModeToggle" class="theme-toggle" aria-label="切换暗黑模式">🌙</button>
+          <button class="nav-toggle md:hidden" aria-label="切换菜单">☰</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 主体 -->
+  <main class="main-with-anchor-nav">
+    <!-- 轮播区 -->
+    <section class="carousel-section" id="carousel">
+      <div class="carousel" id="mainCarousel">
+        <div class="carousel-viewport">
+          <div class="carousel-track">
+            <div class="carousel-slide"><img src="assets/images/carousel-wildlife.jpg" alt="长隆野生动物世界"></div>
+            <div class="carousel-slide"><img src="assets/images/carousel-happyworld.jpg" alt="长隆欢乐世界"></div>
+            <div class="carousel-slide"><img src="assets/images/carousel-waterpark.jpg" alt="长隆水上乐园"></div>
+            <div class="carousel-slide"><img src="assets/images/carousel-ocean.jpg" alt="珠海长隆海洋王国"></div>
+          </div>
+        </div>
+        <button class="carousel-prev" aria-label="上一张"><span class="carousel-btn-icon">‹</span></button>
+        <button class="carousel-next" aria-label="下一张"><span class="carousel-btn-icon">›</span></button>
+        <div class="carousel-indicators">
+          <span class="carousel-dot"></span>
+          <span class="carousel-dot"></span>
+          <span class="carousel-dot"></span>
+          <span class="carousel-dot"></span>
+        </div>
+        <div class="carousel-progress">
+          <span class="carousel-progress-bar"></span>
+          <span class="carousel-progress-bar"></span>
+          <span class="carousel-progress-bar"></span>
+          <span class="carousel-progress-bar"></span>
+        </div>
+      </div>
+    </section>
+
+    <!-- 目的地概览 -->
+    <section class="destinations-section py-16" id="destinations">
+      <div class="container">
+        <h2 class="section-title">热门目的地 <span class="blink-text">·</span></h2>
+        <div id="destinationsGrid" class="destinations-grid grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- 由 JS 动态填充 -->
+        </div>
+      </div>
+    </section>
+
+    <!-- 入口区 -->
+    <section class="entries-section py-16" id="entries">
+      <div class="container">
+        <h2 class="entries-section-title">快捷入口</h2>
+        <p class="entries-section-desc">数据与攻略，一站获取</p>
+        <div class="entries-grid">
+          <a href="analytics.html" class="entry-card">
+            <span class="entry-card-icon" aria-hidden="true">📊</span>
+            <h3 class="entry-card-title">数据可视化</h3>
+            <p class="entry-card-desc">查看旅游数据与趋势分析</p>
+            <span class="entry-card-cta">进入</span>
+          </a>
+          <a href="guide.html" class="entry-card">
+            <span class="entry-card-icon" aria-hidden="true">📖</span>
+            <h3 class="entry-card-title">旅游攻略</h3>
+            <p class="entry-card-desc">目的地攻略与出行建议</p>
+            <span class="entry-card-cta">进入</span>
+          </a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 底部 -->
+  <footer class="site-footer" id="footer">
+    <div class="container text-center">
+      <div class="developer-photo">
+        <img data-src="assets/images/developer.jpg" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='64' height='64'/%3E" alt="开发者" class="w-16 h-16 rounded-full mx-auto object-cover" width="64" height="64">
+      </div>
+      <p>© 2025 <span class="footer-brand">长隆旅游</span> 版权所有</p>
+      <p class="footer-contact">联系我们：400-xxx-xxxx</p>
+    </div>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="回到顶部">↑</button>
+
+  <script src="js/page-transition.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/dark-mode.js"></script>
+  <script src="js/lazy-load.js"></script>
+  <script src="js/carousel.js"></script>
+  <script src="js/back-to-top.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      initCarousel('#mainCarousel', { interval: 4000 });
+      initBackToTop('#backToTop');
+      initDarkMode('#darkModeToggle');
+      fetch('assets/data/destinations.json')
+        .then(function (r) { return r.json(); })
+        .then(function (list) {
+          var grid = document.getElementById('destinationsGrid');
+          if (!grid) return;
+          grid.innerHTML = list.slice(0, 6).map(function (d) {
+            return '<a href="destinations.html" class="dest-card">' +
+              '<div class="dest-card-img-wrap"><img data-src="' + d.imageUrl + '" src="" alt="' + d.name + '" class="lazy"></div>' +
+              '<div class="dest-card-body"><h3>' + d.name + '</h3><p>' + (d.description || '').slice(0, 40) + '...</p></div></a>';
+          }).join('');
+          if (typeof initLazyLoad === 'function') initLazyLoad('img[data-src]');
+        })
+        .catch(function () {});
+    });
+  </script>
+</body>
+</html>

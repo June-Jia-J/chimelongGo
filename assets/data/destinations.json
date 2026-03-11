@@ -1,0 +1,62 @@
+[
+  {
+    "id": 1,
+    "name": "长隆野生动物世界",
+    "city": "广州",
+    "province": "广东省",
+    "district": "番禺区",
+    "description": "亚洲最大的野生动物主题公园，拥有500多种、20000多只珍奇动物。",
+    "imageUrl": "assets/images/dest-wildlife.jpg",
+    "category": "主题乐园"
+  },
+  {
+    "id": 2,
+    "name": "长隆欢乐世界",
+    "city": "广州",
+    "province": "广东省",
+    "district": "番禺区",
+    "description": "中国最具影响力的主题乐园之一，拥有多项世界级过山车。",
+    "imageUrl": "assets/images/dest-happyworld.jpg",
+    "category": "主题乐园"
+  },
+  {
+    "id": 3,
+    "name": "长隆水上乐园",
+    "city": "广州",
+    "province": "广东省",
+    "district": "番禺区",
+    "description": "全球游客接待量最多的水上乐园，夏天必去的消暑圣地。",
+    "imageUrl": "assets/images/dest-waterpark.jpg",
+    "category": "水上乐园"
+  },
+  {
+    "id": 4,
+    "name": "长隆飞鸟乐园",
+    "city": "广州",
+    "province": "广东省",
+    "district": "番禺区",
+    "description": "拥有数百种珍稀鸟类，是亲子互动与自然教育的理想场所。",
+    "imageUrl": "assets/images/dest-birdpark.jpg",
+    "category": "主题乐园"
+  },
+  {
+    "id": 5,
+    "name": "珠海长隆海洋王国",
+    "city": "珠海",
+    "province": "广东省",
+    "district": "横琴新区",
+    "description": "全球最大的海洋主题乐园，拥有多项吉尼斯世界纪录。",
+    "imageUrl": "assets/images/dest-ocean.jpg",
+    "category": "海洋乐园"
+  },
+  {
+    "id": 6,
+    "name": "长隆大马戏",
+    "city": "广州",
+    "province": "广东省",
+    "district": "番禺区",
+    "description": "世界级的国际大马戏表演，融合杂技、驯兽、歌舞于一体。",
+    "imageUrl": "assets/images/dest-circus.jpg",
+    "category": "演出"
+  }
+]

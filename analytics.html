@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>长隆旅游 - 数据可视化</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <script>if(localStorage.getItem('theme')==='dark')document.body.setAttribute('data-theme','dark');</script>
+  <script>document.body.classList.add('page-enter');requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.body.classList.remove('page-enter'); }); });</script>
+  <!-- 头部：导航栏 -->
+  <header>
+    <nav class="site-nav" role="navigation">
+      <div class="container flex items-center justify-between">
+        <div class="nav-brand-wrap">
+          <a href="index.html" class="nav-brand">
+            <span class="nav-brand-icon" aria-hidden="true"><img src="assets/icons/favicon.ico" alt="" width="32" height="32"></span>
+            长隆旅游
+          </a>
+          <span class="nav-brand-tagline">探索精彩旅程</span>
+        </div>
+        <ul class="nav-menu hidden md:flex">
+          <li><a href="index.html">首页</a></li>
+          <li class="nav-dropdown">
+            <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">目的地<span class="nav-dropdown-arrow" aria-hidden="true">▾</span></button>
+            <ul class="nav-dropdown-menu" role="menu">
+              <li role="none"><a href="destinations.html" role="menuitem">全部目的地</a></li>
+              <li role="none"><a href="destinations.html?city=广州" role="menuitem">广州长隆</a></li>
+              <li role="none"><a href="destinations.html?city=珠海" role="menuitem">珠海长隆</a></li>
+            </ul>
+          </li>
+          <li><a href="guide.html">攻略</a></li>
+          <li><a href="analytics.html">数据</a></li>
+        </ul>
+        <div class="nav-actions flex items-center gap-2">
+          <button id="darkModeToggle" class="theme-toggle" aria-label="切换暗黑模式">🌙</button>
+          <button class="nav-toggle md:hidden" aria-label="切换菜单">☰</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- 主体：数据可视化页 -->
+  <main>
+    <!-- 区块：图表容器与加载态 -->
+    <section class="analytics-page py-12">
+      <div class="container chart-loading-wrap">
+        <div id="chartLoading" class="chart-loading" aria-live="polite" aria-busy="true">
+          <div class="chart-loading-arc" aria-hidden="true">
+            <span class="chart-loading-arc-dot"></span>
+            <span class="chart-loading-arc-dot"></span>
+            <span class="chart-loading-arc-dot"></span>
+            <span class="chart-loading-arc-dot"></span>
+            <span class="chart-loading-arc-dot"></span>
+            <span class="chart-loading-arc-dot"></span>
+            <span class="chart-loading-arc-dot"></span>
+            <span class="chart-loading-arc-dot"></span>
+            <span class="chart-loading-arc-dot"></span>
+            <span class="chart-loading-arc-dot"></span>
+          </div>
+          <p class="chart-loading-text">正在加载图表数据...</p>
+        </div>
+        <h1 class="text-2xl font-bold mb-8 text-center">旅游数据可视化</h1>
+        <!-- 本页锚点导航 -->
+        <nav class="anchor-nav container mb-6" aria-label="本页导航">
+          <a href="#chart-bar">柱状图</a>
+          <a href="#chart-pie">饼图</a>
+          <a href="#chart-line">折线图</a>
+          <a href="#table-detail">数据表</a>
+        </nav>
+        <!-- 子区块：柱状图（月/季/年维度） -->
+        <div class="chart-section mb-12" id="chart-bar">
+          <div class="flex flex-wrap gap-2 mb-4 justify-center">
+            <button class="chart-dim-btn active" data-dim="month">月</button>
+            <button class="chart-dim-btn" data-dim="quarter">季</button>
+            <button class="chart-dim-btn" data-dim="year">年</button>
+          </div>
+          <div id="barChart" class="chart-container" style="height:350px;"></div>
+        </div>
+        <!-- 子区块：饼图 -->
+        <div class="chart-section mb-12" id="chart-pie">
+          <div id="pieChart" class="chart-container" style="height:350px;"></div>
+        </div>
+        <!-- 子区块：折线图 -->
+        <div class="chart-section mb-12" id="chart-line">
+          <div id="lineChart" class="chart-container" style="height:350px;"></div>
+        </div>
+        <!-- 子区块：热门城市访问量明细表 -->
+        <div class="chart-section mb-12" id="table-detail">
+          <h2 class="text-xl font-semibold mb-4 text-center">热门城市访问量明细</h2>
+          <div class="table-wrap">
+            <table class="data-table" aria-label="热门旅游城市访问量">
+              <thead>
+                <tr>
+                  <th scope="col">排名</th>
+                  <th scope="col">城市</th>
+                  <th scope="col">访问量</th>
+                </tr>
+              </thead>
+              <tbody id="cityVisitTableBody">
+                <!-- 由 JS 根据 chart-data 填充 -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- 底部：版权与联系方式 -->
+  <footer class="site-footer">
+    <div class="container text-center">
+      <p>© 2025 <span class="footer-brand">长隆旅游</span> 版权所有</p>
+      <p class="footer-contact">联系我们：400-xxx-xxxx</p>
+    </div>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="回到顶部">↑</button>
+
+  <script src="js/page-transition.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/echarts@5.4.3/dist/echarts.min.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/dark-mode.js"></script>
+  <script src="js/back-to-top.js"></script>
+  <script src="js/charts.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      initBackToTop('#backToTop');
+      initDarkMode('#darkModeToggle');
+      var loadingEl = document.getElementById('chartLoading');
+      var loadingShownAt = 0;
+      function hideChartLoading() {
+        if (!loadingEl) return;
+        function doHide() {
+          loadingEl.classList.add('hidden');
+        }
+        if (loadingShownAt === 0) loadingShownAt = Date.now();
+        var elapsed = Date.now() - loadingShownAt;
+        var minShow = 600;
+        if (elapsed >= minShow) {
+          requestAnimationFrame(function () { requestAnimationFrame(doHide); });
+        } else {
+          setTimeout(function () {
+            requestAnimationFrame(function () { requestAnimationFrame(doHide); });
+          }, minShow - elapsed);
+        }
+      }
+      requestAnimationFrame(function () {
+        loadingShownAt = Date.now();
+        initAnalyticsCharts({
+          barId: 'barChart',
+          pieId: 'pieChart',
+          lineId: 'lineChart',
+          dimension: 'month',
+          onAllReady: function (data) {
+            hideChartLoading();
+            if (data && data.cityVisit) {
+              window._chartData = data;
+              renderCityVisitTable(data.cityVisit.month);
+            }
+          },
+          onError: function () {
+            hideChartLoading();
+            if (typeof window.toast !== 'undefined') window.toast('图表数据加载失败', 'error');
+          }
+        });
+      });
+      function renderCityVisitTable(list) {
+        var tbody = document.getElementById('cityVisitTableBody');
+        if (!tbody || !list) return;
+        tbody.innerHTML = list.map(function (row, i) {
+          return '<tr><td>' + (i + 1) + '</td><td>' + row.city + '</td><td>' + row.value + '</td></tr>';
+        }).join('');
+      }
+      document.querySelectorAll('.chart-dim-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          document.querySelectorAll('.chart-dim-btn').forEach(function (b) { b.classList.remove('active'); });
+          btn.classList.add('active');
+          var dim = btn.getAttribute('data-dim');
+          if (typeof window._barChartUpdate === 'function') window._barChartUpdate(dim);
+          if (window._chartData && window._chartData.cityVisit && dim) {
+            var list = window._chartData.cityVisit[dim] || window._chartData.cityVisit.month;
+            renderCityVisitTable(list);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,5 @@
+services:
+  frontend:
+    build: .
+    ports: ["3205:80"]
+    restart: unless-stopped
