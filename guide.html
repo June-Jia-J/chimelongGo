@@ -44,9 +44,27 @@
     </nav>
   </header>
 
-  <!-- 主体：攻略详情页 -->
+  <!-- 主体：攻略列表页或详情页 -->
   <main>
-    <article class="guide-article py-12">
+    <!-- 攻略列表页 -->
+    <section id="guideListSection" class="py-12" style="display:none;">
+      <div class="container">
+        <h1 class="text-2xl font-bold mb-8">攻略列表</h1>
+        <div class="flex justify-between items-center mb-6">
+          <div class="sort-controls">
+            <label for="sortSelect" class="mr-2">排序方式：</label>
+            <select id="sortSelect" class="px-3 py-2 border rounded">
+              <option value="date-desc">发布日期（从新到旧）</option>
+              <option value="date-asc">发布日期（从旧到新）</option>
+            </select>
+          </div>
+        </div>
+        <div id="guideList" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
+      </div>
+    </section>
+
+    <!-- 攻略详情页 -->
+    <article id="guideDetailSection" class="guide-article py-12">
       <div class="container max-w-3xl">
         <!-- 区块：攻略标题、日期、封面、正文 -->
         <div id="guideHeader" class="mb-8">
@@ -160,11 +178,63 @@
   <script src="js/back-to-top.js"></script>
   <script src="js/lazy-load.js"></script>
   <script>
+    var allGuides = [];
+
+    function renderGuideList(list) {
+      var el = document.getElementById('guideList');
+      if (!el) return;
+      el.innerHTML = list.length ? list.map(function (g) {
+        return '<a href="guide.html?id=' + g.id + '" class="dest-card guide-card">' +
+          '<div class="dest-card-img-wrap"><img data-src="' + g.coverUrl + '" src="" alt="' + g.title + '" class="lazy"></div>' +
+          '<div class="dest-card-body">' +
+          '<h3 class="text-lg font-semibold mb-2">' + g.title + '</h3>' +
+          '<p class="text-gray-500 text-sm">发布日期：' + (g.publishDate || '') + '</p>' +
+          '</div></a>';
+      }).join('') : '<p class="text-gray-500 py-8 text-center col-span-full">暂无攻略</p>';
+      if (list.length && typeof initLazyLoad === 'function') initLazyLoad('img[data-src]');
+    }
+
+    function sortGuides(list, sortBy) {
+      var sorted = list.slice();
+      if (sortBy === 'date-desc') {
+        sorted.sort(function(a, b) { return new Date(b.publishDate) - new Date(a.publishDate); });
+      } else if (sortBy === 'date-asc') {
+        sorted.sort(function(a, b) { return new Date(a.publishDate) - new Date(b.publishDate); });
+      }
+      return sorted;
+    }
+
     document.addEventListener('DOMContentLoaded', function () {
       initBackToTop('#backToTop');
       initDarkMode('#darkModeToggle');
-      var id = (window.Utils && window.Utils.getQueryParam && window.Utils.getQueryParam('id')) || '1';
+
+      var id = (window.Utils && window.Utils.getQueryParam && window.Utils.getQueryParam('id')) || '';
+      var listSection = document.getElementById('guideListSection');
+      var detailSection = document.getElementById('guideDetailSection');
+
+      if (!id) {
+        listSection.style.display = 'block';
+        detailSection.style.display = 'none';
+      } else {
+        listSection.style.display = 'none';
+        detailSection.style.display = 'block';
+      }
+
       fetch('assets/data/guides.json').then(function(r){return r.json();}).then(function(guides){
+        allGuides = guides;
+
+        if (!id) {
+          var sortSelect = document.getElementById('sortSelect');
+          if (sortSelect) {
+            renderGuideList(sortGuides(guides, sortSelect.value));
+            sortSelect.addEventListener('change', function() {
+              renderGuideList(sortGuides(allGuides, this.value));
+            });
+          } else {
+            renderGuideList(sortGuides(guides, 'date-desc'));
+          }
+          return;
+        }
         var g = guides.find(function(x){ return String(x.id) === String(id); }) || guides[0];
         document.getElementById('guideTitle').textContent = g.title;
         document.getElementById('guideDate').textContent = '发布日期：' + (g.publishDate || '');
