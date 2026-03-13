@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>长隆旅游 - 攻略列表</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="css/base.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+  <script>if(localStorage.getItem('theme')==='dark')document.body.setAttribute('data-theme','dark');</script>
+  <script>document.body.classList.add('page-enter');requestAnimationFrame(function(){ requestAnimationFrame(function(){ document.body.classList.remove('page-enter'); }); });</script>
+  <header>
+    <nav class="site-nav" role="navigation">
+      <div class="container flex items-center justify-between">
+        <div class="nav-brand-wrap">
+          <a href="index.html" class="nav-brand">
+            <span class="nav-brand-icon" aria-hidden="true"><img src="assets/icons/favicon.ico" alt="" width="32" height="32"></span>
+            长隆旅游
+          </a>
+          <span class="nav-brand-tagline">探索精彩旅程</span>
+        </div>
+        <ul class="nav-menu hidden md:flex">
+          <li><a href="index.html">首页</a></li>
+          <li class="nav-dropdown">
+            <button type="button" class="nav-dropdown-trigger" aria-haspopup="true" aria-expanded="false">目的地<span class="nav-dropdown-arrow" aria-hidden="true">▾</span></button>
+            <ul class="nav-dropdown-menu" role="menu">
+              <li role="none"><a href="destinations.html" role="menuitem">全部目的地</a></li>
+              <li role="none"><a href="destinations.html?city=广州" role="menuitem">广州长隆</a></li>
+              <li role="none"><a href="destinations.html?city=珠海" role="menuitem">珠海长隆</a></li>
+            </ul>
+          </li>
+          <li><a href="guides.html" class="active">攻略</a></li>
+          <li><a href="analytics.html">数据</a></li>
+        </ul>
+        <div class="nav-actions flex items-center gap-2">
+          <button id="darkModeToggle" class="theme-toggle" aria-label="切换暗黑模式">🌙</button>
+          <button class="nav-toggle md:hidden" aria-label="切换菜单">☰</button>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+    <section class="guides-page py-12">
+      <div class="container">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 gap-4">
+          <h1 class="text-2xl font-bold">攻略列表</h1>
+          <div class="sort-controls flex items-center gap-3">
+            <span class="text-gray-600 text-sm">按日期排序：</span>
+            <button id="sortDesc" class="sort-btn sort-btn--active" data-order="desc">最新发布</button>
+            <button id="sortAsc" class="sort-btn" data-order="asc">最早发布</button>
+          </div>
+        </div>
+        <div id="guidesList" class="guides-list grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container text-center">
+      <p>© 2025 <span class="footer-brand">长隆旅游</span> 版权所有</p>
+      <p class="footer-contact">联系我们：400-xxx-xxxx</p>
+    </div>
+  </footer>
+
+  <button id="backToTop" class="back-to-top" aria-label="回到顶部">↑</button>
+
+  <script src="js/page-transition.js"></script>
+  <script src="js/utils.js"></script>
+  <script src="js/toast.js"></script>
+  <script src="js/nav.js"></script>
+  <script src="js/dark-mode.js"></script>
+  <script src="js/back-to-top.js"></script>
+  <script src="js/lazy-load.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      initBackToTop('#backToTop');
+      initDarkMode('#darkModeToggle');
+
+      var guidesData = [];
+      var currentOrder = 'desc';
+
+      function formatDate(dateStr) {
+        if (!dateStr) return '';
+        var d = new Date(dateStr);
+        var y = d.getFullYear();
+        var m = String(d.getMonth() + 1).padStart(2, '0');
+        var day = String(d.getDate()).padStart(2, '0');
+        return y + '-' + m + '-' + day;
+      }
+
+      function renderGuides(list) {
+        var el = document.getElementById('guidesList');
+        if (!el) return;
+        el.innerHTML = list.length ? list.map(function (g) {
+          return '<a href="guide.html?id=' + g.id + '" class="dest-card guide-card">' +
+            '<div class="dest-card-img-wrap">' +
+              '<img data-src="' + g.coverUrl + '" src="" alt="' + g.title + '" class="lazy">' +
+              '<span class="guide-date-badge">' + formatDate(g.publishDate) + '</span>' +
+            '</div>' +
+            '<div class="dest-card-body">' +
+              '<h3 class="guide-card-title">' + g.title + '</h3>' +
+            '</div>' +
+          '</a>';
+        }).join('') : '<p class="text-gray-500 py-8 text-center col-span-full">暂无攻略</p>';
+        if (list.length && typeof initLazyLoad === 'function') initLazyLoad('img[data-src]');
+      }
+
+      function sortGuides(order) {
+        var sorted = guidesData.slice().sort(function (a, b) {
+          var da = new Date(a.publishDate || '1970-01-01');
+          var db = new Date(b.publishDate || '1970-01-01');
+          return order === 'asc' ? da - db : db - da;
+        });
+        renderGuides(sorted);
+      }
+
+      function updateSortButtons(activeOrder) {
+        var btnDesc = document.getElementById('sortDesc');
+        var btnAsc = document.getElementById('sortAsc');
+        if (activeOrder === 'desc') {
+          btnDesc.classList.add('sort-btn--active');
+          btnAsc.classList.remove('sort-btn--active');
+        } else {
+          btnAsc.classList.add('sort-btn--active');
+          btnDesc.classList.remove('sort-btn--active');
+        }
+      }
+
+      document.getElementById('sortDesc').addEventListener('click', function () {
+        currentOrder = 'desc';
+        sortGuides(currentOrder);
+        updateSortButtons(currentOrder);
+      });
+
+      document.getElementById('sortAsc').addEventListener('click', function () {
+        currentOrder = 'asc';
+        sortGuides(currentOrder);
+        updateSortButtons(currentOrder);
+      });
+
+      fetch('assets/data/guides.json')
+        .then(function (r) { return r.json(); })
+        .then(function (list) {
+          guidesData = list || [];
+          sortGuides(currentOrder);
+        })
+        .catch(function () {
+          document.getElementById('guidesList').innerHTML = '<p class="text-gray-500 py-8 text-center col-span-full">加载失败，请刷新重试</p>';
+        });
+    });
+  </script>
+
+  <style>
+    .sort-btn {
+      padding: 0.5rem 1rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--color-gray-600);
+      background: var(--color-cream-dark);
+      border: 1px solid rgba(30, 58, 138, 0.12);
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: all var(--transition-fast);
+    }
+    .sort-btn:hover {
+      color: var(--color-primary);
+      background: rgba(30, 58, 138, 0.08);
+      border-color: rgba(30, 58, 138, 0.2);
+    }
+    .sort-btn--active {
+      color: var(--color-white);
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+    .sort-btn--active:hover {
+      background: var(--color-primary-dark);
+      border-color: var(--color-primary-dark);
+    }
+    [data-theme="dark"] .sort-btn {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.12);
+      color: var(--color-gray-400);
+    }
+    [data-theme="dark"] .sort-btn:hover {
+      color: var(--color-primary);
+      background: rgba(96, 165, 250, 0.12);
+      border-color: rgba(96, 165, 250, 0.2);
+    }
+    [data-theme="dark"] .sort-btn--active {
+      color: var(--color-white);
+      background: var(--color-primary);
+      border-color: var(--color-primary);
+    }
+    .guide-card {
+      display: flex;
+      flex-direction: column;
+    }
+    .guide-card .dest-card-img-wrap {
+      position: relative;
+    }
+    .guide-date-badge {
+      position: absolute;
+      bottom: 0.5rem;
+      left: 0.5rem;
+      padding: 0.25rem 0.6rem;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: var(--color-white);
+      background: rgba(30, 58, 138, 0.85);
+      border-radius: var(--radius-sm);
+      backdrop-filter: blur(4px);
+    }
+    [data-theme="dark"] .guide-date-badge {
+      background: rgba(96, 165, 250, 0.85);
+    }
+    .guide-card-title {
+      font-size: 1rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: var(--color-gray-800);
+      margin: 0;
+    }
+    [data-theme="dark"] .guide-card-title {
+      color: var(--color-gray-200);
+    }
+  </style>
+</body>
+</html>
